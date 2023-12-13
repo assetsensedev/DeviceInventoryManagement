@@ -76,7 +76,7 @@ namespace WindowsFormsApp1
             this.ServerURLTxt.Name = "ServerURLTxt";
             this.ServerURLTxt.Size = new System.Drawing.Size(384, 26);
             this.ServerURLTxt.TabIndex = 6;
-            this.ServerURLTxt.Text = "https://qa.assetsense.com/c2/";
+            //this.ServerURLTxt.Text = "https://qa.assetsense.com/c2/";
             // 
             // ServerUrlLabel
             // 
@@ -109,7 +109,7 @@ namespace WindowsFormsApp1
             this.PasswordTxt.PasswordChar = '*';
             this.PasswordTxt.Size = new System.Drawing.Size(384, 26);
             this.PasswordTxt.TabIndex = 3;
-            this.PasswordTxt.Text = "HydeVil#71";
+          
             // 
             // UsernameTxt
             // 
@@ -118,7 +118,7 @@ namespace WindowsFormsApp1
             this.UsernameTxt.Name = "UsernameTxt";
             this.UsernameTxt.Size = new System.Drawing.Size(384, 26);
             this.UsernameTxt.TabIndex = 2;
-            this.UsernameTxt.Text = "sravanthi.iot1";
+            
             // 
             // PasswordLabel
             // 
