@@ -40,10 +40,10 @@ namespace WindowsFormsApp1
                     createDeviceInventoryDto.DeviceInventory = new DeviceInventory();
                     createDeviceInventoryDto.DeviceInventory.deviceCode = deviceKey;
                     var responseDto = await proxyBase.MakeAPICall(c2ServerUrl, createDeviceInventoryDto);
-                    var hexAppString = Encryption.EncryptHexString(responseDto.AppKey);
-
-                    var hexNwkString = Encryption.EncryptHexString(responseDto.NwkKey);
-
+                    var hexAppStringBeforeCRC = Encryption.EncryptHexString(responseDto.AppKey);
+                    var hexAppString = Encryption.CRCCalculation(hexAppStringBeforeCRC);
+                    var hexNwkStringBeforeCrc = Encryption.EncryptHexString(responseDto.NwkKey);
+                    var hexNwkString = Encryption.CRCCalculation(hexNwkStringBeforeCrc);
                     if (!string.IsNullOrEmpty(hexAppString) && !string.IsNullOrEmpty(hexNwkString))
                     {
                         SerialPort_Write(command2);
