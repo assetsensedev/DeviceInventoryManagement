@@ -81,6 +81,7 @@ namespace WindowsFormsApp1
 
         private async Task proceedButton_click(object sender, EventArgs e)
         {
+            
             string c2ServiceUrl = "services/deviceinventoryservice/savedeviceinventory";
             if (typeEnum.Equals(TypeEnum.Test))
             {
@@ -106,8 +107,16 @@ namespace WindowsFormsApp1
             }
             else if (typeEnum.Equals(TypeEnum.Interface))
             {
-                SerialPortImplementation serialPortImplementation = new SerialPortImplementation("COM1", new LoginDetailsDto(UsernameTxt.Text, PasswordTxt.Text, ServerURLTxt.Text), c2ServiceUrl);
-                await serialPortImplementation.main();
+                if(this.SerialPortCombo.SelectedItem == null )
+                {
+                    MessageBox.Show("Kindly select the port");
+                    return;
+                }
+                this.richTextBox1.Text = "";
+
+                SerialPortImplementation serialPortImplementation = new SerialPortImplementation(this.SerialPortCombo.SelectedItem.ToString(), new LoginDetailsDto(UsernameTxt.Text, PasswordTxt.Text, ServerURLTxt.Text), c2ServiceUrl);
+                var message = await serialPortImplementation.main();
+                this.richTextBox1.Text = message;
             }
         }
 
@@ -115,49 +124,69 @@ namespace WindowsFormsApp1
 
         private object[] GetSerialPort()
         {
-            try
+            string[] ports = SerialPort.GetPortNames();
+            if(ports != null && ports.Length > 0)
             {
-
-
-                string[] ports = SerialPort.GetPortNames();
-                if (ports != null && ports.Length > 0)
+                object[] port = new object[ports.Length];
+                for (int i = 0; i < ports.Length; i++)
                 {
-                    object[] objects = new object[ports.Length + 3];
-                    DeviceLogger.logger.Debug("The following serial ports were found:");
-                    objects[0] = "COM1";
-                    objects[1] = "COM2";
-                    objects[2] = "COM3";
-                    // Display each port name to the console.
-                    for (int i = 3; i < ports.Length + 3; i++)
-                    {
-                        string port = ports[i - 3];
-                        if (port == "COM1" || port == "COM2" || port == "COM3")
-                        {
-                            continue;
-                        }
-                        DeviceLogger.logger.Debug($"{port}");
-                        objects[i] = port;
-                    }
-
-                    return objects;
+                    
+                    DeviceLogger.logger.Debug($"{ports[i]} and i value is :"+i);
                 }
-                else
-                {
-                    object[] objects = new object[3];
-                    objects[0] = "COM1";
-                    objects[1] = "COM2";
-                    objects[2] = "COM3";
-                    return objects;
-                }
+                return ports;
             }
-            catch(Exception ex)
+            else
             {
-                DeviceLogger.logger.Error("Exeption is getting serial port " + ex.Message);
                 object[] objects = new object[2];
                 objects[0] = "COM4";
                 objects[1] = "COM11";
                 return objects;
             }
+           
+            //try
+            //{
+
+
+            //    
+            //    if (ports != null && ports.Length > 0)
+            //    {
+            //        object[] objects = new object[ports.Length + 3];
+            //        DeviceLogger.logger.Debug("The following serial ports were found:");
+            //        objects[0] = "COM1";
+            //        objects[1] = "COM2";
+            //        objects[2] = "COM3";
+            //        // Display each port name to the console.
+            //        for (int i = 3; i < ports.Length + 3; i++)
+            //        {
+            //            string port = ports[i - 3];
+            //            if (port == "COM1" || port == "COM2" || port == "COM3")
+            //            {
+            //                continue;
+            //            }
+
+            //            objects[i] = port;
+            //            DeviceLogger.logger.Debug($"{port}");
+            //        }
+
+            //        return objects;
+            //    }
+            //    else
+            //    {
+            //        object[] objects = new object[3];
+            //        objects[0] = "COM1";
+            //        objects[1] = "COM2";
+            //        objects[2] = "COM3";
+            //        return objects;
+            //    }
+            //}
+            //catch(Exception ex)
+            //{
+            //    DeviceLogger.logger.Error("Exeption is getting serial port " + ex.Message);
+            //    object[] objects = new object[2];
+            //    objects[0] = "COM4";
+            //    objects[1] = "COM11";
+            //    return objects;
+            //}
 
         }
 

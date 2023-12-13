@@ -85,6 +85,8 @@ namespace WindowsFormsApp1
                         sb.Append($@"  Success while generating the device \b {root.DeviceInventory.deviceCode} \b0 with  network key as  \b {result.DeviceInventory.networkKey}\b0  and appkey as \b {result.DeviceInventory.appKey}\b0");
                         sb.Append(@"}");
                         reponseDto.message = sb.ToString();
+                        reponseDto.AppKey = result.DeviceInventory.appKey;
+                        reponseDto.NwkKey = result.DeviceInventory.networkKey;
                         // message = $"Success while generating the device with  network key as {result.DeviceInventory.networkKey} and appkey as {result.DeviceInventory.appKey}";
                     }
                     catch (Exception ex)

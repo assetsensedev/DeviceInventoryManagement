@@ -4,6 +4,7 @@ using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace WindowsFormsApp1
 {
@@ -27,8 +28,9 @@ namespace WindowsFormsApp1
 
 
         }
-        public async Task<int> main()
+        public async Task<string > main()
         {
+            string message = string.Empty;
             var returnValue = SerialPort_Init();
             if (returnValue)
             {
@@ -40,54 +42,80 @@ namespace WindowsFormsApp1
                     createDeviceInventoryDto.DeviceInventory = new DeviceInventory();
                     createDeviceInventoryDto.DeviceInventory.deviceCode = deviceKey;
                     var responseDto = await proxyBase.MakeAPICall(c2ServerUrl, createDeviceInventoryDto);
-                    var hexAppStringBeforeCRC = Encryption.EncryptHexString(responseDto.AppKey);
-                    var hexAppString = Encryption.CRCCalculation(hexAppStringBeforeCRC);
-                    var hexNwkStringBeforeCrc = Encryption.EncryptHexString(responseDto.NwkKey);
-                    var hexNwkString = Encryption.CRCCalculation(hexNwkStringBeforeCrc);
-                    if (!string.IsNullOrEmpty(hexAppString) && !string.IsNullOrEmpty(hexNwkString))
+                    if(!string.IsNullOrEmpty(responseDto.NwkKey) && !string.IsNullOrEmpty(responseDto.AppKey))
                     {
-                        SerialPort_Write(command2);
-                        if (SerialPort_Read(StepsEnum.ReadSecondAcknowledgement) == Success)
+                        var hexAppStringBeforeCRC = Encryption.EncryptHexString(responseDto.AppKey);
+                        var hexAppString = Encryption.CRCCalculation(hexAppStringBeforeCRC);
+                        var hexNwkStringBeforeCrc = Encryption.EncryptHexString(responseDto.NwkKey);
+                        var hexNwkString = Encryption.CRCCalculation(hexNwkStringBeforeCrc);
+                        if (!string.IsNullOrEmpty(hexAppString) && !string.IsNullOrEmpty(hexNwkString))
                         {
-                            SerialPort_Write(hexAppString);
-                            if (SerialPort_Read(StepsEnum.ReadFirstOk) == Success)
+                            SerialPort_Write(command2);
+                            if (SerialPort_Read(StepsEnum.ReadSecondAcknowledgement) == Success)
                             {
-                                SerialPort_Write(command3);
-                                if (SerialPort_Read(StepsEnum.ReadSecondAcknowledgement) == Success)
+                                SerialPort_Write(hexAppString);
+                                if (SerialPort_Read(StepsEnum.ReadFirstOk) == Success)
                                 {
-                                    SerialPort_Write(hexNwkString);
-                                    if (SerialPort_Read(StepsEnum.ReadFirstOk) == Success)
+                                    SerialPort_Write(command3);
+                                    if (SerialPort_Read(StepsEnum.ReadSecondAcknowledgement) == Success)
                                     {
-                                        DeviceLogger.logger.Debug("Success");
+                                        SerialPort_Write(hexNwkString);
+                                        if (SerialPort_Read(StepsEnum.ReadFirstOk) == Success)
+                                        {
+                                            message = "Success";
+                                            CloseConnection();
+                                            DeviceLogger.logger.Debug("Success");
+                                        }
+                                        else
+                                        {
+                                            CloseConnection();
+                                            message = "Error in reading ok after sending Nwk string";
+                                            DeviceLogger.logger.Error(message);
+                                        }
                                     }
                                     else
                                     {
-                                        DeviceLogger.logger.Error("Error in reading ok after sending Nwk string");
+                                        CloseConnection();
+                                        message = "Error Programming the device. ACK Failed for CMD2";
+                                        DeviceLogger.logger.Error(message);
                                     }
                                 }
                                 else
                                 {
-                                    DeviceLogger.logger.Error("Error Programming the device. ACK Failed for CMD2");
+                                    CloseConnection();
+                                    message = "Error in reading ok after sending app string";
+                                    DeviceLogger.logger.Error(message);
                                 }
                             }
                             else
                             {
-                                DeviceLogger.logger.Error("Error in reading ok after sending app string");
+                                CloseConnection();
+                                message = "Error Programming the device. ACK Failed for CMD2";
+                                DeviceLogger.logger.Error("Error Programming the device. ACK Failed for CMD2");
                             }
                         }
                         else
                         {
-                            DeviceLogger.logger.Error("Error Programming the device. ACK Failed for CMD2");
+                            CloseConnection();
+                            message = "APP key or network key is null or empty";
                         }
                     }
+                  
 
                 }
                 else
                 {
-                    DeviceLogger.logger.Error("Acknowledgement not proper from serial port device");
+                    CloseConnection();
+                    message = "Acknowledgement not proper from serial port device";
+                    DeviceLogger.logger.Error(message);
                 }
             }
-            return 1;
+            else
+            {
+                CloseConnection();
+                message = "Could not communicate with serial port ";
+            }
+            return message;
         }
 
         public bool SerialPort_Init()
@@ -95,18 +123,20 @@ namespace WindowsFormsApp1
             try
             {
                 hComm = new SerialPort(pcCommPort, 115200, Parity.None, 8, StopBits.One);
-                hComm.ReadTimeout = 5000;
+                hComm.ReadTimeout = 10000;
                 hComm.WriteTimeout = 1000;
                 hComm.Open();
                 DeviceLogger.logger.Debug("Opening serial port successful");
             }
             catch (UnauthorizedAccessException)
             {
+                CloseConnection();
                 DeviceLogger.logger.Error("cannot open port!");
                 return false;
             }
             catch (Exception ex)
             {
+                CloseConnection();
                 DeviceLogger.logger.Error($"invalid handle value! with exception as {ex.Message}");
                 return false;
             }
@@ -130,6 +160,7 @@ namespace WindowsFormsApp1
             }
             catch (Exception ex)
             {
+                CloseConnection();
                 DeviceLogger.logger.Error("Error writing text to {0}: {1}", pcCommPort, ex.Message);
             }
         }
@@ -142,7 +173,14 @@ namespace WindowsFormsApp1
                     try
                     {
                         DeviceLogger.logger.Debug("Receiving first acknowledgement");
-                        string readExisting = hComm.ReadExisting();
+                        //string readExisting = hComm.ReadExisting();
+                        byte[] data = new byte[19];
+                        for (int offset = 0; offset < 19;)
+                        {
+                            int n = hComm.Read(data, offset, data.Length - offset);
+                            offset += n;
+                        }
+                        string readExisting = Encoding.ASCII.GetString(data);
                         DeviceLogger.logger.Debug($"Read from serial port {readExisting}");
                         if (readExisting.StartsWith("ACK"))
                         {
@@ -161,7 +199,15 @@ namespace WindowsFormsApp1
                     try
                     {
                         DeviceLogger.logger.Debug("Receiving second acknowledgement");
-                        string readExisting = hComm.ReadExisting();
+                        byte[] data = new byte[3];
+                        for (int offset = 0; offset < 3;)
+                        {
+                            int n = hComm.Read(data, offset, data.Length - offset);
+                            offset += n;
+                        }
+                        string readExisting = Encoding.ASCII.GetString(data);
+                       
+                        
                         DeviceLogger.logger.Debug($"Read from serial port {readExisting}");
                         if (readExisting.EndsWith("ACK"))
                         {
@@ -180,7 +226,14 @@ namespace WindowsFormsApp1
                     try
                     {
                         DeviceLogger.logger.Debug("Receiving first ok");
-                        string readExisting = hComm.ReadExisting();
+                        byte[] data = new byte[4];
+                        for (int offset = 0; offset < 4;)
+                        {
+                            int n = hComm.Read(data, offset, data.Length - offset);
+                            offset += n;
+                        }
+                        string readExisting = Encoding.ASCII.GetString(data);
+
                         DeviceLogger.logger.Debug($"Read from serial port {readExisting}");
                         if (readExisting.EndsWith("OK!!"))
                         {
@@ -234,6 +287,19 @@ namespace WindowsFormsApp1
             string hex = BitConverter.ToString(bytes).Replace("-", "");
             DeviceLogger.logger.Debug(hex);
             return hex;
+        }
+
+        public void CloseConnection()
+        {
+            try
+            {
+                hComm.Close();
+                DeviceLogger.logger.Info("Closing connection");
+            }
+            catch(Exception e)
+            {
+                DeviceLogger.logger.Error("Error while closing ",e.Message );
+            }
         }
     }
 }
