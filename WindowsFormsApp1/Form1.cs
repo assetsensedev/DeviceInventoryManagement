@@ -115,34 +115,47 @@ namespace WindowsFormsApp1
 
         private object[] GetSerialPort()
         {
-            string[] ports = SerialPort.GetPortNames();
-            if (ports != null && ports.Length > 0)
+            try
             {
-                object[] objects = new object[ports.Length + 3];
-                DeviceLogger.logger.Debug("The following serial ports were found:");
-                objects[0] = "COM1";
-                objects[1] = "COM2";
-                objects[2] = "COM3";
-                // Display each port name to the console.
-                for (int i = 3; i < ports.Length + 3; i++)
-                {
-                    string port = ports[i - 3];
-                    if (port == "COM1" || port == "COM2" || port == "COM3")
-                    {
-                        continue;
-                    }
-                    DeviceLogger.logger.Debug($"{port}");
-                    objects[i] = port;
-                }
 
-                return objects;
+
+                string[] ports = SerialPort.GetPortNames();
+                if (ports != null && ports.Length > 0)
+                {
+                    object[] objects = new object[ports.Length + 3];
+                    DeviceLogger.logger.Debug("The following serial ports were found:");
+                    objects[0] = "COM1";
+                    objects[1] = "COM2";
+                    objects[2] = "COM3";
+                    // Display each port name to the console.
+                    for (int i = 3; i < ports.Length + 3; i++)
+                    {
+                        string port = ports[i - 3];
+                        if (port == "COM1" || port == "COM2" || port == "COM3")
+                        {
+                            continue;
+                        }
+                        DeviceLogger.logger.Debug($"{port}");
+                        objects[i] = port;
+                    }
+
+                    return objects;
+                }
+                else
+                {
+                    object[] objects = new object[3];
+                    objects[0] = "COM1";
+                    objects[1] = "COM2";
+                    objects[2] = "COM3";
+                    return objects;
+                }
             }
-            else
+            catch(Exception ex)
             {
-                object[] objects = new object[3];
-                objects[0] = "COM1";
-                objects[1] = "COM2";
-                objects[2] = "COM3";
+                DeviceLogger.logger.Error("Exeption is getting serial port " + ex.Message);
+                object[] objects = new object[2];
+                objects[0] = "COM4";
+                objects[1] = "COM11";
                 return objects;
             }
 

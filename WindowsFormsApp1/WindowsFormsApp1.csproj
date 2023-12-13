@@ -107,10 +107,18 @@
     <Content Include="load.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Resources\resizeloadgif.gif" />
-    <None Include="Resources\ZZ5H.gif" />
-    <None Include="Resources\resizedLoad.png" />
-    <None Include="Resources\load.png" />
+    <None Include="Resources\resizeloadgif.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\ZZ5H.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\resizedLoad.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\load.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
