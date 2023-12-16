@@ -39,8 +39,8 @@ namespace WindowsFormsApp1
             this.UsernameTxt = new System.Windows.Forms.TextBox();
             this.PasswordLabel = new System.Windows.Forms.Label();
             this.UsernameLabel = new System.Windows.Forms.Label();
-            this.panel2 = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.keyTxt = new System.Windows.Forms.TextBox();
             this.keyLabel = new System.Windows.Forms.Label();
@@ -52,8 +52,8 @@ namespace WindowsFormsApp1
             this.copyRightLabel = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
-            this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -109,7 +109,7 @@ namespace WindowsFormsApp1
             this.PasswordTxt.PasswordChar = '*';
             this.PasswordTxt.Size = new System.Drawing.Size(384, 26);
             this.PasswordTxt.TabIndex = 3;
-          
+            //this.PasswordTxt.Text = "HydeVil#71";
             // 
             // UsernameTxt
             // 
@@ -118,7 +118,7 @@ namespace WindowsFormsApp1
             this.UsernameTxt.Name = "UsernameTxt";
             this.UsernameTxt.Size = new System.Drawing.Size(384, 26);
             this.UsernameTxt.TabIndex = 2;
-            
+            //this.UsernameTxt.Text = "sravanthi.iot1";
             // 
             // PasswordLabel
             // 
@@ -140,6 +140,18 @@ namespace WindowsFormsApp1
             this.UsernameLabel.TabIndex = 0;
             this.UsernameLabel.Text = "Username";
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.BackColor = System.Drawing.SystemColors.HighlightText;
+            this.pictureBox1.Image = global::WindowsFormsApp1.Properties.Resources.resizeloadgif;
+            this.pictureBox1.InitialImage = global::WindowsFormsApp1.Properties.Resources.resizeloadgif;
+            this.pictureBox1.Location = new System.Drawing.Point(615, 204);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(225, 200);
+            this.pictureBox1.TabIndex = 7;
+            this.pictureBox1.TabStop = false;
+            this.pictureBox1.Visible = false;
+            // 
             // panel2
             // 
             this.panel2.Controls.Add(this.pictureBox1);
@@ -154,18 +166,6 @@ namespace WindowsFormsApp1
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(1454, 706);
             this.panel2.TabIndex = 5;
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.BackColor = System.Drawing.SystemColors.HighlightText;
-            this.pictureBox1.Image = global::WindowsFormsApp1.Properties.Resources.resizeloadgif;
-            this.pictureBox1.InitialImage = global::WindowsFormsApp1.Properties.Resources.resizeloadgif;
-            this.pictureBox1.Location = new System.Drawing.Point(615, 204);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(225, 200);
-            this.pictureBox1.TabIndex = 7;
-            this.pictureBox1.TabStop = false;
-            this.pictureBox1.Visible = false;
             // 
             // richTextBox1
             // 
@@ -228,12 +228,10 @@ namespace WindowsFormsApp1
             this.comboBox1.Size = new System.Drawing.Size(227, 28);
             this.comboBox1.TabIndex = 0;
             this.comboBox1.SelectedValueChanged += new System.EventHandler(this.comboBox1_SelectionChangeCommitted);
-            this.comboBox1.SelectedIndex = 0;
             // 
             // SerialPortCombo
             // 
             this.SerialPortCombo.FormattingEnabled = true;
-            this.SerialPortCombo.Items.AddRange(GetSerialPort());
             this.SerialPortCombo.Location = new System.Drawing.Point(480, 42);
             this.SerialPortCombo.Name = "SerialPortCombo";
             this.SerialPortCombo.Size = new System.Drawing.Size(227, 28);
@@ -266,27 +264,30 @@ namespace WindowsFormsApp1
             this.label2.Font = new System.Drawing.Font("Microsoft YaHei UI", 22F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(554, 32);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(359, 58);
+            this.label2.Size = new System.Drawing.Size(490, 58);
             this.label2.TabIndex = 7;
-            this.label2.Text = "Device Manger";
+            this.label2.Text = "Device Inventory(SP)";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1480, 902);
+            this.AutoSize = true;
+            this.ClientSize = new System.Drawing.Size(1582, 1050);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.copyRightLabel);
             this.Controls.Add(this.DeviceVersionLabel);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.panel2);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "Form1";
-            this.Text = "DeviceWriter";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "DI-SP";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

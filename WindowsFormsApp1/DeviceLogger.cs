@@ -9,11 +9,16 @@ namespace WindowsFormsApp1
 {
     public static class  DeviceLogger
     {
-        public static Logger logger;
+        public static Logger MainLogger;
+        public static Logger ActivityLogger;
         static DeviceLogger()
         {
-            logger = LogManager.GetLogger("");
-            logger.Debug("Started Logging");
+            MainLogger = LogManager.GetLogger("mainLog");
+            MainLogger.Debug("Started Logging");
+
+            ActivityLogger = LogManager.GetLogger("activityLog");
         }
+
+
     }
 }

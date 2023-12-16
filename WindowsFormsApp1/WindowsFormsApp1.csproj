@@ -24,7 +24,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-  
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
@@ -59,8 +58,10 @@
     <Compile Include="Domain\DeviceInventory.cs" />
     <Compile Include="DeviceLogger.cs" />
     <Compile Include="Domain\ErrorMessageDto.cs" />
+    <Compile Include="Domain\LoginModel.cs" />
     <Compile Include="Domain\ReponseDto.cs" />
     <Compile Include="Encryption.cs" />
+    <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>

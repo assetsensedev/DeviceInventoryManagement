@@ -5,9 +5,11 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Drawing.Text;
+using System.IO;
 using System.IO.Ports;
 using System.Linq;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -23,14 +25,14 @@ namespace WindowsFormsApp1
         {
             InitializeComponent();
             this.panel1.BringToFront();
-
+            ReadActivityLog();
             //this.panel2.SendToBack();
             //this.panel2.Visible = false;
         }
 
         
 
-        private void LoginBtn_Click(object sender, EventArgs e)
+        private async void LoginBtn_Click(object sender, EventArgs e)
         {
             bool isError = false;
             if(string.IsNullOrEmpty(this.UsernameTxt.Text))
@@ -41,9 +43,28 @@ namespace WindowsFormsApp1
             if (string.IsNullOrEmpty(this.PasswordTxt.Text))
             {
                 isError = true;
-                MessageBox.Show("Paasword is required");
+                MessageBox.Show("Password is required");
             }
-            
+            if (string.IsNullOrEmpty(this.ServerURLTxt.Text))
+            {
+                isError = true;
+                MessageBox.Show("Server Url is required");
+            }
+            ServiceProxyBase  serviceProxyBase = new ServiceProxyBase(new LoginDetailsDto
+            (this.UsernameTxt.Text,  this.PasswordTxt.Text,this.ServerURLTxt.Text)
+            );
+            this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
+            this.pictureBox1.Visible = true;
+
+            isError = ! await serviceProxyBase.CheckUserCreds();
+
+            this.Cursor = System.Windows.Forms.Cursors.Default;
+            this.pictureBox1.Visible = false;
+
+            if (isError)
+            {
+                MessageBox.Show("Invalid Username and password");
+            }
             // 
             //this.panel1.Visible = false;
             //this.panel2.Visible = true;
@@ -98,12 +119,9 @@ namespace WindowsFormsApp1
                 this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
                 this.pictureBox1.Visible = true;
               
-                var reponseDto = await proxy.MakeAPICall(c2ServiceUrl, root);
+                var reponseDto = await proxy.MakeAPICall(c2ServiceUrl, root, typeEnum);
                 this.pictureBox1.Visible = false;
                 this.Cursor = System.Windows.Forms.Cursors.Default;
-                this.richTextBox1.Rtf = reponseDto.message;
-
-
             }
             else if (typeEnum.Equals(TypeEnum.Interface))
             {
@@ -112,11 +130,14 @@ namespace WindowsFormsApp1
                     MessageBox.Show("Kindly select the port");
                     return;
                 }
-                this.richTextBox1.Text = "";
-
+                //this.richTextBox1.Text = "";
+                this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
+                this.pictureBox1.Visible = true;
                 SerialPortImplementation serialPortImplementation = new SerialPortImplementation(this.SerialPortCombo.SelectedItem.ToString(), new LoginDetailsDto(UsernameTxt.Text, PasswordTxt.Text, ServerURLTxt.Text), c2ServiceUrl);
                 var message = await serialPortImplementation.main();
-                this.richTextBox1.Text = message;
+                this.pictureBox1.Visible = false;
+                this.Cursor = System.Windows.Forms.Cursors.Default;
+              
             }
         }
 
@@ -131,7 +152,7 @@ namespace WindowsFormsApp1
                 for (int i = 0; i < ports.Length; i++)
                 {
                     
-                    DeviceLogger.logger.Debug($"{ports[i]} and i value is :"+i);
+                    DeviceLogger.MainLogger.Debug($"{ports[i]} and i value is :"+i);
                 }
                 return ports;
             }
@@ -193,6 +214,45 @@ namespace WindowsFormsApp1
         private async void proceedButton_Click_1(object sender, EventArgs e)
         {
             await this.proceedButton_click(sender, e);
+            ReadActivityLog();
         }
+
+        private void RefreshLogs(object sender, EventArgs e)
+        {
+            ReadActivityLog();
+        }
+        private void ReadActivityLog()
+        {
+            var enviroment = System.Environment.CurrentDirectory+@"\logs\";
+            string FileName = enviroment + "activityFile.txt";
+            //if (File.Exists(FileName))
+            //{
+            //   //string[] lines = ;
+            //    foreach (string line in File.ReadAllLines(FileName).Reverse())
+            //    {
+            //        this.richTextBox1.AppendText(line+"\n");
+            //    }
+                
+            //}
+
+            try
+            {
+                using (FileStream fileStream = new FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
+                    using (StreamReader streamReader = new StreamReader(fileStream))
+                    {
+                        richTextBox1.Text = streamReader.ReadToEnd();
+                    }
+                }
+                this.richTextBox1.ScrollToBottom();
+                // wfe.scrollToBottom(txtActivityStatusLog);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
+       
     }
 }

@@ -183,5 +183,30 @@ namespace WindowsFormsApp1
             return key+crc.ToString("X2");
         }
 
+        public static string CRCCalculation(string key, int length)
+        {
+            const byte CRC8_POLY = 0x9B;
+            byte crc = 0xFF;
+            for (int i = 0; i < length; i++)
+            {
+                crc ^= Convert.ToByte(key[i]);
+                for (int j = 0; j < 8; j++)
+                {
+                    if ((crc & 0x80) != 0)
+                    {
+                        crc = (byte)((crc << Convert.ToByte(1)) ^ CRC8_POLY);
+                    }
+                    else
+                    {
+                        crc <<= Convert.ToByte(1);
+                    }
+                }
+            }
+
+            crc ^= 0x00;
+            DeviceLogger.MainLogger.Debug("crc tabe sbyte " + crc.ToString("X2"));
+            return key + crc.ToString("X2");
+        }
+
     }
 }
