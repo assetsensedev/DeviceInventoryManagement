@@ -64,11 +64,13 @@ namespace WindowsFormsApp1
                                         {
                                             message = "Success";
                                             CloseConnection();
+                                            DeviceLogger.ActivityLogger.Debug("Successfully written to serial port");
                                             DeviceLogger.MainLogger.Debug("Success");
                                         }
                                         else
                                         {
                                             CloseConnection();
+                                            DeviceLogger.ActivityLogger.Debug("Unsuccessfully in writing to serial port");
                                             message = "Error in reading ok after sending Nwk string";
                                             DeviceLogger.MainLogger.Error(message);
                                         }
@@ -76,6 +78,7 @@ namespace WindowsFormsApp1
                                     else
                                     {
                                         CloseConnection();
+                                        DeviceLogger.ActivityLogger.Debug("Unsuccessfully in writing to serial port");
                                         message = "Error Programming the device. ACK Failed for CMD2";
                                         DeviceLogger.MainLogger.Error(message);
                                     }
@@ -83,6 +86,7 @@ namespace WindowsFormsApp1
                                 else
                                 {
                                     CloseConnection();
+                                    DeviceLogger.ActivityLogger.Debug("Unsuccessfully in writing to serial port");
                                     message = "Error in reading ok after sending app string";
                                     DeviceLogger.MainLogger.Error(message);
                                 }
@@ -90,6 +94,7 @@ namespace WindowsFormsApp1
                             else
                             {
                                 CloseConnection();
+                                DeviceLogger.ActivityLogger.Debug("Unsuccessfully in writing to serial port");
                                 message = "Error Programming the device. ACK Failed for CMD2";
                                 DeviceLogger.MainLogger.Error("Error Programming the device. ACK Failed for CMD2");
                             }
@@ -97,6 +102,7 @@ namespace WindowsFormsApp1
                         else
                         {
                             CloseConnection();
+                            DeviceLogger.ActivityLogger.Debug("App Key or network key is null");
                             message = "APP key or network key is null or empty";
                         }
                     }
@@ -106,6 +112,7 @@ namespace WindowsFormsApp1
                 else
                 {
                     CloseConnection();
+                    DeviceLogger.ActivityLogger.Debug("Acknowledgement not proper from serial port device");
                     message = "Acknowledgement not proper from serial port device";
                     DeviceLogger.MainLogger.Error(message);
                 }
@@ -113,6 +120,7 @@ namespace WindowsFormsApp1
             else
             {
                 CloseConnection();
+                DeviceLogger.ActivityLogger.Debug("Communication failed with serial port");
                 message = "Could not communicate with serial port ";
             }
             return message;

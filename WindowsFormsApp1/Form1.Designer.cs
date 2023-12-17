@@ -1,5 +1,6 @@
 ﻿using System.IO.Ports;
 using System;
+using System.Drawing;
 
 namespace WindowsFormsApp1
 {
@@ -51,6 +52,8 @@ namespace WindowsFormsApp1
             this.DeviceVersionLabel = new System.Windows.Forms.Label();
             this.copyRightLabel = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.TestRadioButton = new System.Windows.Forms.RadioButton();
+            this.SerialPortRadioButton = new System.Windows.Forms.RadioButton();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel2.SuspendLayout();
@@ -160,7 +163,8 @@ namespace WindowsFormsApp1
             this.panel2.Controls.Add(this.keyLabel);
             this.panel2.Controls.Add(this.proceedButton);
             this.panel2.Controls.Add(this.TypeLabel);
-            this.panel2.Controls.Add(this.comboBox1);
+            this.panel2.Controls.Add(this.TestRadioButton);
+            this.panel2.Controls.Add(this.SerialPortRadioButton);
             this.panel2.Controls.Add(this.SerialPortCombo);
             this.panel2.Location = new System.Drawing.Point(0, 108);
             this.panel2.Name = "panel2";
@@ -192,7 +196,7 @@ namespace WindowsFormsApp1
             this.keyLabel.Name = "keyLabel";
             this.keyLabel.Size = new System.Drawing.Size(105, 22);
             this.keyLabel.TabIndex = 5;
-            this.keyLabel.Text = "Serial Port";
+            this.keyLabel.Text = "Port";
             // 
             // proceedButton
             // 
@@ -216,27 +220,43 @@ namespace WindowsFormsApp1
             this.TypeLabel.Size = new System.Drawing.Size(55, 22);
             this.TypeLabel.TabIndex = 1;
             this.TypeLabel.Text = "Type";
+
+            // test radio button
+            ///
+            this.TestRadioButton.AutoSize = true;
+            TestRadioButton.Text = "Test";
+            TestRadioButton.Location = new Point(93, 42);
+            TestRadioButton.Font = new Font("Berlin Sans FB", 12);
+
+            // Serial port radio button
+            this.SerialPortRadioButton.AutoSize = true;
+            SerialPortRadioButton.Text = "Serail Port";
+            SerialPortRadioButton.Location = new Point(180, 42);
+            SerialPortRadioButton.Font = new Font("Berlin Sans FB", 12);
+            SerialPortRadioButton.Checked = true;
+            SerialPortRadioButton.CheckedChanged += SerialPortRadioButton_CheckedChanged;
             // 
             // comboBox1
             // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
-            "Interface",
-            "Test"});
-            this.comboBox1.Location = new System.Drawing.Point(93, 42);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(227, 28);
-            this.comboBox1.TabIndex = 0;
-            this.comboBox1.SelectedValueChanged += new System.EventHandler(this.comboBox1_SelectionChangeCommitted);
-            // 
+            //this.comboBox1.FormattingEnabled = true;
+            //this.comboBox1.Items.AddRange(new object[] {
+            //"Interface",
+            //"Test"});
+            //this.comboBox1.Location = new System.Drawing.Point(93, 42);
+            //this.comboBox1.Name = "comboBox1";
+            //this.comboBox1.Size = new System.Drawing.Size(227, 28);
+            //this.comboBox1.TabIndex = 0;
+            //this.comboBox1.SelectedValueChanged += new System.EventHandler(this.comboBox1_SelectionChangeCommitted);
+            //// 
             // SerialPortCombo
             // 
             this.SerialPortCombo.FormattingEnabled = true;
+            this.SerialPortCombo.Items.AddRange(GetSerialPort());
             this.SerialPortCombo.Location = new System.Drawing.Point(480, 42);
             this.SerialPortCombo.Name = "SerialPortCombo";
             this.SerialPortCombo.Size = new System.Drawing.Size(227, 28);
             this.SerialPortCombo.TabIndex = 0;
-            this.SerialPortCombo.SelectedValueChanged += new System.EventHandler(this.comboBox1_SelectionChangeCommitted);
+            //this.SerialPortCombo.SelectedValueChanged += new System.EventHandler(this.comboBox1_SelectionChangeCommitted);
             // 
             // DeviceVersionLabel
             // 
@@ -293,7 +313,9 @@ namespace WindowsFormsApp1
 
         }
 
-        
+       
+
+
 
         #endregion
 
@@ -317,6 +339,8 @@ namespace WindowsFormsApp1
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.ComboBox SerialPortCombo;
+        private System.Windows.Forms.RadioButton TestRadioButton;
+        private System.Windows.Forms.RadioButton SerialPortRadioButton;
     }
 }
 

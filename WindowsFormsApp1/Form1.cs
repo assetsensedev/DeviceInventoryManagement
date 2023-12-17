@@ -24,8 +24,10 @@ namespace WindowsFormsApp1
         public Form1()
         {
             InitializeComponent();
+            ReadServerAndUserName();
             this.panel1.BringToFront();
-            ReadActivityLog();
+            
+         
             //this.panel2.SendToBack();
             //this.panel2.Visible = false;
         }
@@ -50,6 +52,16 @@ namespace WindowsFormsApp1
                 isError = true;
                 MessageBox.Show("Server Url is required");
             }
+           
+            if (isError)
+            {
+                return;
+            }
+            if (!ServerURLTxt.Text.EndsWith("/"))
+            {
+                ServerURLTxt.Text = ServerURLTxt.Text + "/";
+
+            }
             ServiceProxyBase  serviceProxyBase = new ServiceProxyBase(new LoginDetailsDto
             (this.UsernameTxt.Text,  this.PasswordTxt.Text,this.ServerURLTxt.Text)
             );
@@ -69,14 +81,98 @@ namespace WindowsFormsApp1
             //this.panel1.Visible = false;
             //this.panel2.Visible = true;
             //this.panel1.SendToBack();
-            if (! isError)
-            this.panel2.BringToFront();
+            if (!isError)
+            {
+                ReadActivityLog();
+                var enviroment = System.Environment.CurrentDirectory + @"\logs\";
+                string FileName = enviroment + "loginDetails.txt";
+                if (!File.Exists(FileName))
+                {
+                    try
+                    {
+                        if (!Directory.Exists(enviroment))
+                        {
+                            Directory.CreateDirectory(enviroment);
+                        }
+                        File.WriteAllText(FileName, this.ServerURLTxt.Text + ", username: " + this.UsernameTxt.Text);
+
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex);
+                    }
+                }
+                this.panel2.BringToFront();
+                
+            
+            }
+            
         }
 
         
 
-        
+        private void ReadServerAndUserName()
+        {
+            try
+            {
+                var enviroment = System.Environment.CurrentDirectory + @"\logs\";
+                string FileName = enviroment + "loginDetails.txt";
+                
+                if (File.Exists(FileName))
+                {
+                    using (FileStream fileStream = new FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                    {
+                        using (StreamReader streamReader = new StreamReader(fileStream))
+                        {
+                           string loginDetails = streamReader.ReadToEnd();
+                            if (!string.IsNullOrEmpty(loginDetails))
+                            {
 
+
+                                var splitArray = loginDetails.Split(new string[] { ", username: " }, StringSplitOptions.None);
+                                var splitServerName = splitArray[0];
+                                if (splitArray.Length >= 2)
+                                {
+                                    var splitUserName = splitArray[1];
+                                    if (!string.IsNullOrEmpty(splitUserName))
+                                    {
+                                        this.UsernameTxt.Text = splitUserName;
+                                    }
+
+                                }
+
+                                if (!string.IsNullOrEmpty(splitServerName))
+                                {
+                                    this.ServerURLTxt.Text = splitServerName;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
+
+        private void SerialPortRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.TestRadioButton.Checked)
+            {
+                typeEnum = TypeEnum.Test;
+                this.keyLabel.Text = "Device";
+                this.keyTxt.Visible = true;
+                this.SerialPortCombo.Visible = false;
+            }
+            else if (this.SerialPortRadioButton.Checked)
+            {
+                typeEnum = TypeEnum.Interface;
+                this.keyLabel.Text = "Port";
+                this.keyTxt.Visible = false;
+                this.SerialPortCombo.Visible = true;
+            }
+        }
         private void comboBox1_SelectionChangeCommitted(object sender, EventArgs e)
         {
 
@@ -158,10 +254,8 @@ namespace WindowsFormsApp1
             }
             else
             {
-                object[] objects = new object[2];
-                objects[0] = "COM4";
-                objects[1] = "COM11";
-                return objects;
+               
+                return new object[0];
             }
            
             //try
@@ -234,23 +328,26 @@ namespace WindowsFormsApp1
             //    }
                 
             //}
-
-            try
+            if (File.Exists(FileName))
             {
-                using (FileStream fileStream = new FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                try
                 {
-                    using (StreamReader streamReader = new StreamReader(fileStream))
+                    using (FileStream fileStream = new FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                     {
-                        richTextBox1.Text = streamReader.ReadToEnd();
+                        using (StreamReader streamReader = new StreamReader(fileStream))
+                        {
+                            richTextBox1.Text = streamReader.ReadToEnd();
+                        }
                     }
+                    this.richTextBox1.ScrollToBottom();
+                    // wfe.scrollToBottom(txtActivityStatusLog);
                 }
-                this.richTextBox1.ScrollToBottom();
-                // wfe.scrollToBottom(txtActivityStatusLog);
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
+            
         }
 
        

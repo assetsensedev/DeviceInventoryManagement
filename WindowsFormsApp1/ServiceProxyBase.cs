@@ -93,7 +93,7 @@ namespace WindowsFormsApp1
                         }
                         else
                         {
-                            sb.Append($@"Successfully created Test device:  {root.DeviceInventory.deviceCode}  ,Network Key, App Key written to the device");
+                            sb.Append($@"Successfully created Test device:  {root.DeviceInventory.deviceCode}  ,Network Key, App Key");
                            
                             reponseDto.message = sb.ToString();
                             reponseDto.AppKey = result.DeviceInventory.appKey;
