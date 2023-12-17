@@ -161,14 +161,14 @@ namespace WindowsFormsApp1
             if (this.TestRadioButton.Checked)
             {
                 typeEnum = TypeEnum.Test;
-                this.keyLabel.Text = "Device";
+                this.keyLabel.Text = "Device :";
                 this.keyTxt.Visible = true;
                 this.SerialPortCombo.Visible = false;
             }
             else if (this.SerialPortRadioButton.Checked)
             {
                 typeEnum = TypeEnum.Interface;
-                this.keyLabel.Text = "Port";
+                this.keyLabel.Text = "   Port :";
                 this.keyTxt.Visible = false;
                 this.SerialPortCombo.Visible = true;
             }

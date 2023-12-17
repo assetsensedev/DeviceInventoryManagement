@@ -162,7 +162,7 @@ namespace WindowsFormsApp1
             this.panel2.Controls.Add(this.keyTxt);
             this.panel2.Controls.Add(this.keyLabel);
             this.panel2.Controls.Add(this.proceedButton);
-            this.panel2.Controls.Add(this.TypeLabel);
+            //this.panel2.Controls.Add(this.TypeLabel);
             this.panel2.Controls.Add(this.TestRadioButton);
             this.panel2.Controls.Add(this.SerialPortRadioButton);
             this.panel2.Controls.Add(this.SerialPortCombo);
@@ -182,9 +182,9 @@ namespace WindowsFormsApp1
             // 
             // keyTxt
             // 
-            this.keyTxt.Location = new System.Drawing.Point(480, 42);
+            this.keyTxt.Location = new System.Drawing.Point(400, 42);
             this.keyTxt.Name = "keyTxt";
-            this.keyTxt.Size = new System.Drawing.Size(227, 26);
+            this.keyTxt.Size = new System.Drawing.Size(227, 28);
             this.keyTxt.TabIndex = 6;
             this.keyTxt.Visible = false;
             // 
@@ -192,11 +192,11 @@ namespace WindowsFormsApp1
             // 
             this.keyLabel.AutoSize = true;
             this.keyLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.keyLabel.Location = new System.Drawing.Point(354, 42);
+            this.keyLabel.Location = new System.Drawing.Point(300, 45);
             this.keyLabel.Name = "keyLabel";
             this.keyLabel.Size = new System.Drawing.Size(105, 22);
             this.keyLabel.TabIndex = 5;
-            this.keyLabel.Text = "Port";
+            this.keyLabel.Text = "   Port :";
             // 
             // proceedButton
             // 
@@ -225,14 +225,14 @@ namespace WindowsFormsApp1
             ///
             this.TestRadioButton.AutoSize = true;
             TestRadioButton.Text = "Test";
-            TestRadioButton.Location = new Point(93, 42);
-            TestRadioButton.Font = new Font("Berlin Sans FB", 12);
+            TestRadioButton.Location = new Point(55, 42);
+            TestRadioButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 
             // Serial port radio button
             this.SerialPortRadioButton.AutoSize = true;
-            SerialPortRadioButton.Text = "Serail Port";
-            SerialPortRadioButton.Location = new Point(180, 42);
-            SerialPortRadioButton.Font = new Font("Berlin Sans FB", 12);
+            SerialPortRadioButton.Text = "Serial Port";
+            SerialPortRadioButton.Location = new Point(140, 42);
+            SerialPortRadioButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             SerialPortRadioButton.Checked = true;
             SerialPortRadioButton.CheckedChanged += SerialPortRadioButton_CheckedChanged;
             // 
@@ -252,7 +252,7 @@ namespace WindowsFormsApp1
             // 
             this.SerialPortCombo.FormattingEnabled = true;
             this.SerialPortCombo.Items.AddRange(GetSerialPort());
-            this.SerialPortCombo.Location = new System.Drawing.Point(480, 42);
+            this.SerialPortCombo.Location = new System.Drawing.Point(400, 42);
             this.SerialPortCombo.Name = "SerialPortCombo";
             this.SerialPortCombo.Size = new System.Drawing.Size(227, 28);
             this.SerialPortCombo.TabIndex = 0;
