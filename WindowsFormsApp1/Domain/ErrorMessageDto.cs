@@ -5,7 +5,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WindowsFormsApp1.Domain
+namespace DeviceInventory.Domain
 {
     public class ErrorMessageDto
     {

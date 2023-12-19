@@ -2,9 +2,9 @@
 using System;
 using System.Drawing;
 
-namespace WindowsFormsApp1
+namespace DeviceInventory
 {
-    partial class Form1
+    partial class DeviceInventoryForm
     {
         /// <summary>
         /// Required designer variable.
@@ -32,7 +32,7 @@ namespace WindowsFormsApp1
         /// </summary>
         private void InitializeComponent()
         {
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.loginPanel = new System.Windows.Forms.Panel();
             this.ServerURLTxt = new System.Windows.Forms.TextBox();
             this.ServerUrlLabel = new System.Windows.Forms.Label();
             this.LoginBtn = new System.Windows.Forms.Button();
@@ -40,38 +40,38 @@ namespace WindowsFormsApp1
             this.UsernameTxt = new System.Windows.Forms.TextBox();
             this.PasswordLabel = new System.Windows.Forms.Label();
             this.UsernameLabel = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.panel2 = new System.Windows.Forms.Panel();
+            this.loader = new System.Windows.Forms.PictureBox();
+            this.devicePanel = new System.Windows.Forms.Panel();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.keyTxt = new System.Windows.Forms.TextBox();
             this.keyLabel = new System.Windows.Forms.Label();
             this.proceedButton = new System.Windows.Forms.Button();
             this.TypeLabel = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.typeComboBox = new System.Windows.Forms.ComboBox();
             this.SerialPortCombo = new System.Windows.Forms.ComboBox();
             this.DeviceVersionLabel = new System.Windows.Forms.Label();
             this.copyRightLabel = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.headerLabel = new System.Windows.Forms.Label();
             this.TestRadioButton = new System.Windows.Forms.RadioButton();
             this.SerialPortRadioButton = new System.Windows.Forms.RadioButton();
-            this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.panel2.SuspendLayout();
+            this.loginPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.loader)).BeginInit();
+            this.devicePanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.ServerURLTxt);
-            this.panel1.Controls.Add(this.ServerUrlLabel);
-            this.panel1.Controls.Add(this.LoginBtn);
-            this.panel1.Controls.Add(this.PasswordTxt);
-            this.panel1.Controls.Add(this.UsernameTxt);
-            this.panel1.Controls.Add(this.PasswordLabel);
-            this.panel1.Controls.Add(this.UsernameLabel);
-            this.panel1.Location = new System.Drawing.Point(0, 108);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1468, 703);
-            this.panel1.TabIndex = 0;
+            this.loginPanel.Controls.Add(this.ServerURLTxt);
+            this.loginPanel.Controls.Add(this.ServerUrlLabel);
+            this.loginPanel.Controls.Add(this.LoginBtn);
+            this.loginPanel.Controls.Add(this.PasswordTxt);
+            this.loginPanel.Controls.Add(this.UsernameTxt);
+            this.loginPanel.Controls.Add(this.PasswordLabel);
+            this.loginPanel.Controls.Add(this.UsernameLabel);
+            this.loginPanel.Location = new System.Drawing.Point(0, 108);
+            this.loginPanel.Name = "panel1";
+            this.loginPanel.Size = new System.Drawing.Size(1468, 703);
+            this.loginPanel.TabIndex = 0;
             // 
             // ServerURLTxt
             // 
@@ -145,31 +145,31 @@ namespace WindowsFormsApp1
             // 
             // pictureBox1
             // 
-            this.pictureBox1.BackColor = System.Drawing.SystemColors.HighlightText;
-            this.pictureBox1.Image = global::WindowsFormsApp1.Properties.Resources.resizeloadgif;
-            this.pictureBox1.InitialImage = global::WindowsFormsApp1.Properties.Resources.resizeloadgif;
-            this.pictureBox1.Location = new System.Drawing.Point(615, 204);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(225, 200);
-            this.pictureBox1.TabIndex = 7;
-            this.pictureBox1.TabStop = false;
-            this.pictureBox1.Visible = false;
+            this.loader.BackColor = System.Drawing.SystemColors.HighlightText;
+            this.loader.Image = global::DeviceInventory.Properties.Resources.resizeloadgif;
+            this.loader.InitialImage = global::DeviceInventory.Properties.Resources.resizeloadgif;
+            this.loader.Location = new System.Drawing.Point(615, 204);
+            this.loader.Name = "pictureBox1";
+            this.loader.Size = new System.Drawing.Size(225, 200);
+            this.loader.TabIndex = 7;
+            this.loader.TabStop = false;
+            this.loader.Visible = false;
             // 
             // panel2
             // 
-            this.panel2.Controls.Add(this.pictureBox1);
-            this.panel2.Controls.Add(this.richTextBox1);
-            this.panel2.Controls.Add(this.keyTxt);
-            this.panel2.Controls.Add(this.keyLabel);
-            this.panel2.Controls.Add(this.proceedButton);
+            this.devicePanel.Controls.Add(this.loader);
+            this.devicePanel.Controls.Add(this.richTextBox1);
+            this.devicePanel.Controls.Add(this.keyTxt);
+            this.devicePanel.Controls.Add(this.keyLabel);
+            this.devicePanel.Controls.Add(this.proceedButton);
             //this.panel2.Controls.Add(this.TypeLabel);
-            this.panel2.Controls.Add(this.TestRadioButton);
-            this.panel2.Controls.Add(this.SerialPortRadioButton);
-            this.panel2.Controls.Add(this.SerialPortCombo);
-            this.panel2.Location = new System.Drawing.Point(0, 108);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1454, 706);
-            this.panel2.TabIndex = 5;
+            this.devicePanel.Controls.Add(this.TestRadioButton);
+            this.devicePanel.Controls.Add(this.SerialPortRadioButton);
+            this.devicePanel.Controls.Add(this.SerialPortCombo);
+            this.devicePanel.Location = new System.Drawing.Point(0, 108);
+            this.devicePanel.Name = "panel2";
+            this.devicePanel.Size = new System.Drawing.Size(1454, 706);
+            this.devicePanel.TabIndex = 5;
             // 
             // richTextBox1
             // 
@@ -280,13 +280,13 @@ namespace WindowsFormsApp1
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft YaHei UI", 22F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(554, 32);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(490, 58);
-            this.label2.TabIndex = 7;
-            this.label2.Text = "Device Inventory(SP)";
+            this.headerLabel.AutoSize = true;
+            this.headerLabel.Font = new System.Drawing.Font("Microsoft YaHei UI", 22F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.headerLabel.Location = new System.Drawing.Point(554, 32);
+            this.headerLabel.Name = "label2";
+            this.headerLabel.Size = new System.Drawing.Size(490, 58);
+            this.headerLabel.TabIndex = 7;
+            this.headerLabel.Text = "Device Inventory(SP)";
             // 
             // Form1
             // 
@@ -294,20 +294,20 @@ namespace WindowsFormsApp1
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(1582, 1050);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.headerLabel);
             this.Controls.Add(this.copyRightLabel);
             this.Controls.Add(this.DeviceVersionLabel);
-            this.Controls.Add(this.panel1);
-            this.Controls.Add(this.panel2);
+            this.Controls.Add(this.loginPanel);
+            this.Controls.Add(this.devicePanel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "DI-SP";
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
+            this.loginPanel.ResumeLayout(false);
+            this.loginPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.loader)).EndInit();
+            this.devicePanel.ResumeLayout(false);
+            this.devicePanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -319,25 +319,25 @@ namespace WindowsFormsApp1
 
         #endregion
 
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel loginPanel;
         private System.Windows.Forms.Label UsernameLabel;
         private System.Windows.Forms.Button LoginBtn;
         private System.Windows.Forms.TextBox PasswordTxt;
         private System.Windows.Forms.TextBox UsernameTxt;
         private System.Windows.Forms.Label PasswordLabel;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.Panel devicePanel;
+        private System.Windows.Forms.ComboBox typeComboBox;
         private System.Windows.Forms.Button proceedButton;
         private System.Windows.Forms.Label TypeLabel;
         private System.Windows.Forms.TextBox keyTxt;
         private System.Windows.Forms.Label keyLabel;
         private System.Windows.Forms.Label DeviceVersionLabel;
         private System.Windows.Forms.Label copyRightLabel;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label headerLabel;
         private System.Windows.Forms.TextBox ServerURLTxt;
         private System.Windows.Forms.Label ServerUrlLabel;
         private System.Windows.Forms.RichTextBox richTextBox1;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox loader;
         private System.Windows.Forms.ComboBox SerialPortCombo;
         private System.Windows.Forms.RadioButton TestRadioButton;
         private System.Windows.Forms.RadioButton SerialPortRadioButton;

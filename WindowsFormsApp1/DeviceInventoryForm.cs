@@ -13,19 +13,19 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using WindowsFormsApp1.Domain;
+using DeviceInventory.Domain;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
-namespace WindowsFormsApp1
+namespace DeviceInventory
 {
-    public partial class Form1 : Form
+    public partial class DeviceInventoryForm : Form
     {
         public TypeEnum typeEnum;
-        public Form1()
+        public DeviceInventoryForm()
         {
             InitializeComponent();
             ReadServerAndUserName();
-            this.panel1.BringToFront();
+            this.loginPanel.BringToFront();
             
          
             //this.panel2.SendToBack();
@@ -66,12 +66,12 @@ namespace WindowsFormsApp1
             (this.UsernameTxt.Text,  this.PasswordTxt.Text,this.ServerURLTxt.Text)
             );
             this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
-            this.pictureBox1.Visible = true;
+            this.loader.Visible = true;
 
             isError = ! await serviceProxyBase.CheckUserCreds();
 
             this.Cursor = System.Windows.Forms.Cursors.Default;
-            this.pictureBox1.Visible = false;
+            this.loader.Visible = false;
 
             if (isError)
             {
@@ -102,7 +102,7 @@ namespace WindowsFormsApp1
                         Console.WriteLine(ex);
                     }
                 }
-                this.panel2.BringToFront();
+                this.devicePanel.BringToFront();
                 
             
             }
@@ -213,10 +213,10 @@ namespace WindowsFormsApp1
                 root.DeviceInventory.deviceCode = this.keyTxt.Text;
                 ServiceProxyBase proxy = new ServiceProxyBase(new LoginDetailsDto(UsernameTxt.Text, PasswordTxt.Text, ServerURLTxt.Text));
                 this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
-                this.pictureBox1.Visible = true;
+                this.loader.Visible = true;
               
                 var reponseDto = await proxy.MakeAPICall(c2ServiceUrl, root, typeEnum);
-                this.pictureBox1.Visible = false;
+                this.loader.Visible = false;
                 this.Cursor = System.Windows.Forms.Cursors.Default;
             }
             else if (typeEnum.Equals(TypeEnum.Interface))
@@ -228,10 +228,10 @@ namespace WindowsFormsApp1
                 }
                 //this.richTextBox1.Text = "";
                 this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
-                this.pictureBox1.Visible = true;
+                this.loader.Visible = true;
                 SerialPortImplementation serialPortImplementation = new SerialPortImplementation(this.SerialPortCombo.SelectedItem.ToString(), new LoginDetailsDto(UsernameTxt.Text, PasswordTxt.Text, ServerURLTxt.Text), c2ServiceUrl);
                 var message = await serialPortImplementation.main();
-                this.pictureBox1.Visible = false;
+                this.loader.Visible = false;
                 this.Cursor = System.Windows.Forms.Cursors.Default;
               
             }

@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace WindowsFormsApp1
+namespace DeviceInventory
 {
     public  class SerialPortImplementation
     {
@@ -64,7 +64,7 @@ namespace WindowsFormsApp1
                                         {
                                             message = "Success";
                                             CloseConnection();
-                                            DeviceLogger.ActivityLogger.Debug("Successfully written to serial port");
+                                            DeviceLogger.ActivityLogger.Debug("Network Key, App Key successfully written to serial port");
                                             DeviceLogger.MainLogger.Debug("Success");
                                         }
                                         else

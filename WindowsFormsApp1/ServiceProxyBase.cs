@@ -9,9 +9,9 @@ using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using WindowsFormsApp1.Domain;
+using DeviceInventory.Domain;
 
-namespace WindowsFormsApp1
+namespace DeviceInventory
 {
     public class ServiceProxyBase
     {
@@ -93,12 +93,12 @@ namespace WindowsFormsApp1
                         }
                         else
                         {
-                            sb.Append($@"Successfully created Test device:  {root.DeviceInventory.deviceCode}  ,Network Key, App Key");
+                            sb.Append($@"Successfully created  device:  {root.DeviceInventory.deviceCode}");
                            
                             reponseDto.message = sb.ToString();
                             reponseDto.AppKey = result.DeviceInventory.appKey;
                             reponseDto.NwkKey = result.DeviceInventory.networkKey;
-
+                            DeviceLogger.MainLogger.Debug("App key : " + reponseDto.AppKey + " network key: " + reponseDto.NwkKey);
                         }
                         
                         
