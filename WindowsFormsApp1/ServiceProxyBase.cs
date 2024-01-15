@@ -41,7 +41,7 @@ namespace DeviceInventory
 
 
             var data = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(json), Encoding.UTF8, "application/json");
-            var url = $"{loginDetailsDto.ServerURL}/{c2ServiceUrl}";
+            var url = $"{loginDetailsDto.ServerURL}{c2ServiceUrl}";
             var response = await sharedClient.PostAsync(url, data);
             return response;
            
