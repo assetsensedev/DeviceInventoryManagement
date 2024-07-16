@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using DeviceInventory.Domain;
+using WindowsFormsApp1.Domain;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace DeviceInventory
@@ -21,6 +22,8 @@ namespace DeviceInventory
     public partial class DeviceInventoryForm : Form
     {
         public TypeEnum typeEnum;
+        public GetDeviceProfileResponseDto deviceProfiles;
+        public GetDeviceTypeResponseDto deviceTypes;
         public DeviceInventoryForm()
         {
             InitializeComponent();
@@ -70,12 +73,13 @@ namespace DeviceInventory
 
             isError = ! await serviceProxyBase.CheckUserCreds();
 
-            this.Cursor = System.Windows.Forms.Cursors.Default;
-            this.loader.Visible = false;
+           
 
             if (isError)
             {
                 MessageBox.Show("Invalid Username and password");
+                this.Cursor = System.Windows.Forms.Cursors.Default;
+                this.loader.Visible = false;
             }
             // 
             //this.panel1.Visible = false;
@@ -83,6 +87,10 @@ namespace DeviceInventory
             //this.panel1.SendToBack();
             if (!isError)
             {
+                deviceTypes = await GetDeviceTypes(serviceProxyBase);
+                deviceProfiles = await GetDeviceProfiles(serviceProxyBase);
+                this.DeviceTypeCombo.Items.Clear();
+                this.DeviceTypeCombo.Items.AddRange(deviceTypes.DeviceTypes.Keys.Cast<Object>().ToArray());
                 ReadActivityLog();
                 var enviroment = System.Environment.CurrentDirectory + @"\logs\";
                 string FileName = enviroment + "loginDetails.txt";
@@ -102,15 +110,25 @@ namespace DeviceInventory
                         Console.WriteLine(ex);
                     }
                 }
+            
                 this.devicePanel.BringToFront();
                 
             
             }
-            
+            this.Cursor = System.Windows.Forms.Cursors.Default;
+            this.loader.Visible = false;
         }
 
-        
+        private async Task<GetDeviceTypeResponseDto> GetDeviceTypes(ServiceProxyBase serviceProxyBase)
+        {
+            return await serviceProxyBase.GetDeviceTypes("services/lookupservice/getcategory/7240");
+        }
 
+        private async Task<GetDeviceProfileResponseDto> GetDeviceProfiles(ServiceProxyBase serviceProxyBase)
+        {
+            return await serviceProxyBase.GetDeviceProfile("services/deviceprofileservice/getdeviceprofiles");
+        }
+ 
         private void ReadServerAndUserName()
         {
             try
@@ -173,26 +191,27 @@ namespace DeviceInventory
                 this.SerialPortCombo.Visible = true;
             }
         }
-        private void comboBox1_SelectionChangeCommitted(object sender, EventArgs e)
+        private void deviceComboValueChanged(object sender, EventArgs e)
         {
 
             System.Windows.Forms.ComboBox senderComboBox = (System.Windows.Forms.ComboBox)sender;
 
-            // Change the length of the text box depending on what the user has 
-            // selected and committed using the SelectionLength property.
-            if (senderComboBox.SelectedItem.ToString().Equals(TypeEnum.Test.ToString(), StringComparison.InvariantCultureIgnoreCase))
+            var deviceTypeSelectedValue = (string)senderComboBox.SelectedItem;
+            var deviceTypeSelectedkey = deviceTypes.DeviceTypes[deviceTypeSelectedValue];
+
+           var deviceProfilesFiltered = deviceProfiles.DeviceProfiles.Where(x => x.Value.DeviceTypePresent.Equals(deviceTypeSelectedkey));
+             
+            this.DeviceProfileCombo.Items.Clear();
+            this.DeviceProfileCombo.Items.AddRange(deviceProfilesFiltered.ToList().Select(x => x.Value.ProfileName).Cast<Object>().ToArray());
+            if(this.DeviceProfileCombo.Items.Count > 0)
             {
-                typeEnum = TypeEnum.Test;
-                this.keyLabel.Text = "Device";
-                this.keyTxt.Visible = true;
-                this.SerialPortCombo.Visible = false;
+                this.DeviceProfileCombo.SelectedIndex = 0;
+                this.DeviceProfileCombo.Enabled = true;
             }
-            else if(senderComboBox.SelectedItem.ToString().Equals(TypeEnum.Interface.ToString(), StringComparison.InvariantCultureIgnoreCase))
+                
+            else
             {
-                typeEnum = TypeEnum.Interface;
-                this.keyLabel.Text = "Serial Port";
-                this.keyTxt.Visible = false;
-                this.SerialPortCombo.Visible = true;
+                this.DeviceProfileCombo.Enabled = false;
             }
         }
 
@@ -200,6 +219,26 @@ namespace DeviceInventory
         {
             
             string c2ServiceUrl = "services/deviceinventoryservice/savedeviceinventory";
+            if (this.DeviceTypeCombo.SelectedItem == null || string.IsNullOrEmpty(this.DeviceTypeCombo.SelectedItem?.ToString()))
+            {
+                MessageBox.Show("Select the device type");
+                return;
+            }
+
+            if (this.DeviceProfileCombo.SelectedItem == null || string.IsNullOrEmpty(this.DeviceProfileCombo.SelectedItem?.ToString()) )
+            {
+                MessageBox.Show("Select the device profile ");
+                return;
+            }
+            if(this.DeviceProfileCombo.Enabled == false)
+            {
+                MessageBox.Show("Select different device Type as for current device type no device profile is present ");
+                return;
+            }
+
+            var deviceTypeId = deviceTypes.DeviceTypes[this.DeviceTypeCombo.SelectedItem.ToString()];
+            var deviceProfileDictionay = deviceProfiles.DeviceProfiles.FirstOrDefault(x => x.Value.ProfileName.Equals(this.DeviceProfileCombo.SelectedItem.ToString()));
+            var profileId= deviceProfileDictionay.Key;
             if (typeEnum.Equals(TypeEnum.Test))
             {
                 if (string.IsNullOrEmpty(this.keyTxt.Text))
@@ -211,11 +250,17 @@ namespace DeviceInventory
                 CreateDeviceInventoryDto root = new CreateDeviceInventoryDto();
                 root.DeviceInventory = new DeviceInventory();
                 root.DeviceInventory.deviceCode = this.keyTxt.Text;
+                root.DeviceInventory.deviceType = new DeviceType();
+                root.DeviceInventory.deviceType.id = deviceTypeId;
+
+                root.DeviceInventory.deviceProfile = new DeviceProfile();
+                root.DeviceInventory.deviceProfile.id = profileId;
+
                 ServiceProxyBase proxy = new ServiceProxyBase(new LoginDetailsDto(UsernameTxt.Text, PasswordTxt.Text, ServerURLTxt.Text));
                 this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
                 this.loader.Visible = true;
               
-                var reponseDto = await proxy.MakeAPICall(c2ServiceUrl, root, typeEnum);
+                var reponseDto = await proxy.CreateDevice(c2ServiceUrl, root, typeEnum);
                 this.loader.Visible = false;
                 this.Cursor = System.Windows.Forms.Cursors.Default;
             }
@@ -229,7 +274,7 @@ namespace DeviceInventory
                 //this.richTextBox1.Text = "";
                 this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
                 this.loader.Visible = true;
-                SerialPortImplementation serialPortImplementation = new SerialPortImplementation(this.SerialPortCombo.SelectedItem.ToString(), new LoginDetailsDto(UsernameTxt.Text, PasswordTxt.Text, ServerURLTxt.Text), c2ServiceUrl);
+                SerialPortImplementation serialPortImplementation = new SerialPortImplementation(this.SerialPortCombo.SelectedItem.ToString(), new LoginDetailsDto(UsernameTxt.Text, PasswordTxt.Text, ServerURLTxt.Text), c2ServiceUrl, deviceTypeId, profileId);
                 var message = await serialPortImplementation.main();
                 this.loader.Visible = false;
                 this.Cursor = System.Windows.Forms.Cursors.Default;

@@ -57,7 +57,11 @@
     <Compile Include="Domain\CreateDeviceInventoryResponseDto.cs" />
     <Compile Include="Domain\DeviceInventory.cs" />
     <Compile Include="DeviceLogger.cs" />
+    <Compile Include="Domain\DeviceProfileRootDto.cs" />
+    <Compile Include="Domain\DeviceTypeRootDto.cs" />
     <Compile Include="Domain\ErrorMessageDto.cs" />
+    <Compile Include="Domain\GetDeviceProfileResponseDto.cs" />
+    <Compile Include="Domain\GetDeviceTypeResponseDto.cs" />
     <Compile Include="Domain\LoginModel.cs" />
     <Compile Include="Domain\ReponseDto.cs" />
     <Compile Include="Encryption.cs" />

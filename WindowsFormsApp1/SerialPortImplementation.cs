@@ -18,13 +18,17 @@ namespace DeviceInventory
         private  SerialPort hComm;
         private readonly ServiceProxyBase proxyBase;
         private const string Success = "Success";
+        private readonly int deviceTypeId;
+        private readonly int deviceProfileId;
 
 
-        public SerialPortImplementation(string port, LoginDetailsDto loginDetailsDto, string c2ServerUrl)
+        public SerialPortImplementation(string port, LoginDetailsDto loginDetailsDto, string c2ServerUrl, int deviceTypeId, int deviceProfileId)
         {
             pcCommPort = port;
             this.c2ServerUrl = c2ServerUrl;
             proxyBase = new ServiceProxyBase(loginDetailsDto);
+            this.deviceTypeId = deviceTypeId;
+            this.deviceProfileId = deviceProfileId;
 
 
         }
@@ -41,7 +45,14 @@ namespace DeviceInventory
                     CreateDeviceInventoryDto createDeviceInventoryDto = new CreateDeviceInventoryDto();
                     createDeviceInventoryDto.DeviceInventory = new DeviceInventory();
                     createDeviceInventoryDto.DeviceInventory.deviceCode = deviceKey;
-                    var responseDto = await proxyBase.MakeAPICall(c2ServerUrl, createDeviceInventoryDto, TypeEnum.Interface);
+
+                    createDeviceInventoryDto.DeviceInventory.deviceType = new DeviceType();
+                    createDeviceInventoryDto.DeviceInventory.deviceType.id = deviceTypeId;
+
+                    createDeviceInventoryDto.DeviceInventory.deviceProfile = new DeviceProfile();
+                    createDeviceInventoryDto.DeviceInventory.deviceProfile.id = deviceProfileId;
+
+                    var responseDto = await proxyBase.CreateDevice(c2ServerUrl, createDeviceInventoryDto, TypeEnum.Interface);
                     if(!string.IsNullOrEmpty(responseDto.NwkKey) && !string.IsNullOrEmpty(responseDto.AppKey))
                     {
                         var hexAppStringBeforeCRC = Encryption.EncryptHexString(responseDto.AppKey);

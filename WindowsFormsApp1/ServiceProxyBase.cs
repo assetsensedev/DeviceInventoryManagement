@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using DeviceInventory.Domain;
+using WindowsFormsApp1.Domain;
 
 namespace DeviceInventory
 {
@@ -31,6 +32,7 @@ namespace DeviceInventory
        
         public async Task<HttpResponseMessage> makePostRequest<T>(string c2ServiceUrl, T json) 
         {
+            HttpResponseMessage response;
             HttpClient sharedClient = new HttpClient()
             {
                 BaseAddress = new Uri(loginDetailsDto.ServerURL),
@@ -42,13 +44,22 @@ namespace DeviceInventory
 
             var data = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(json), Encoding.UTF8, "application/json");
             var url = $"{loginDetailsDto.ServerURL}{c2ServiceUrl}";
-            var response = await sharedClient.PostAsync(url, data);
+            if(json.GetType() == typeof(string) && string.IsNullOrEmpty(json.ToString()))
+            {
+                response= await sharedClient.PostAsync(url, new StringContent(String.Empty, Encoding.UTF8, "application/json"));
+
+            }
+            else
+            {
+                 response = await sharedClient.PostAsync(url, data);
+            }
+           
             return response;
            
 
         }
 
-        public async Task<ReponseDto> MakeAPICall(string c2ServiceUrl, CreateDeviceInventoryDto root, TypeEnum typeEnum)
+        public async Task<ReponseDto> CreateDevice(string c2ServiceUrl, CreateDeviceInventoryDto root, TypeEnum typeEnum)
         {
             ReponseDto reponseDto = new ReponseDto();
             var response = await makePostRequest(c2ServiceUrl, root);
@@ -137,6 +148,169 @@ namespace DeviceInventory
             return reponseDto;
         }
     
+        public async Task<GetDeviceTypeResponseDto> GetDeviceTypes(string c2ServiceUrl)
+        {
+            GetDeviceTypeResponseDto reponseDto = new GetDeviceTypeResponseDto();
+            var response = await makePostRequest(c2ServiceUrl, 7240);
+            if (response != null)
+            {
+                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                {
+                    // send error of unatuthorixed
+                    DeviceLogger.MainLogger.Error($"User not authorized to do the operation {nameof(GetDeviceTypes)}");
+                    var sb = new System.Text.StringBuilder();
+
+                    sb.Append($@"User not authorized  ");
+                    reponseDto.message = sb.ToString();
+                }
+
+                else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    // send message of api not found
+                    DeviceLogger.MainLogger.Error($"API not found {nameof(GetDeviceTypes)}");
+                    var sb = new System.Text.StringBuilder();
+
+                    sb.Append($@"API not found {nameof(GetDeviceTypes)}");
+
+                    reponseDto.message = sb.ToString();
+                }
+
+                else if (response.StatusCode == System.Net.HttpStatusCode.OK )
+                {
+                    // success
+                    DeviceLogger.MainLogger.Error($"API Request successful {nameof(GetDeviceTypes)}");
+                    try
+                    {
+                        var result = Newtonsoft.Json.JsonConvert.DeserializeObject<DeviceTypeRootDto>(await response.Content.ReadAsStringAsync());
+                        var sb = new System.Text.StringBuilder();
+                        reponseDto.DeviceTypes = new Dictionary<string, int>();
+                        foreach (var lookUp in result.Category.lookups)
+                        {
+                            reponseDto.DeviceTypes.Add( lookUp.name, lookUp.id);
+                        }
+
+
+                        // message = $"Success while generating the device with  network key as {result.DeviceInventory.networkKey} and appkey as {result.DeviceInventory.appKey}";
+                    }
+                    catch (Exception ex)
+                    {
+                        DeviceLogger.MainLogger.Error("Error while converting success message {error}", ex.Message);
+                        reponseDto.message = $"Error while converting success message {ex.Message}";
+                    }
+                }
+                else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+                {
+                    // message of 
+                    DeviceLogger.MainLogger.Error("Internal server error");
+                    try
+                    {
+                        var result = Newtonsoft.Json.JsonConvert.DeserializeObject<ErrorMessageDto>(await response.Content.ReadAsStringAsync());
+                        var sb = new System.Text.StringBuilder();
+
+                        sb.Append($@"Error getting device type");
+
+                        reponseDto.message = sb.ToString();
+
+                        //message = $"Error while generating the device with  {result.message}";
+                    }
+                    catch (Exception ex)
+                    {
+                        DeviceLogger.MainLogger.Error("Error while converting error message {error}", ex.Message);
+                        reponseDto.message = $"Error while converting error message {ex.Message}";
+                    }
+                }
+
+            }
+            if(!string.IsNullOrEmpty(reponseDto.message))
+                DeviceLogger.ActivityLogger.Debug(reponseDto.message);
+            return reponseDto;
+
+        }
+
+        public async Task<GetDeviceProfileResponseDto> GetDeviceProfile(string c2ServiceUrl)
+        {
+            GetDeviceProfileResponseDto reponseDto = new GetDeviceProfileResponseDto();
+            var response = await makePostRequest(c2ServiceUrl, new { });
+            if (response != null)
+            {
+                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                {
+                    // send error of unatuthorixed
+                    DeviceLogger.MainLogger.Error($"User not authorized to do the operation {nameof(GetDeviceProfile)}");
+                    var sb = new System.Text.StringBuilder();
+
+                    sb.Append($@"User not authorized  ");
+                    reponseDto.message = sb.ToString();
+                }
+
+                else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    // send message of api not found
+                    DeviceLogger.MainLogger.Error($"API not found {nameof(GetDeviceProfile)}");
+                    var sb = new System.Text.StringBuilder();
+
+                    sb.Append($@"API not found {nameof(GetDeviceProfile)}");
+
+                    reponseDto.message = sb.ToString();
+                }
+
+                else if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    // success
+                    DeviceLogger.MainLogger.Error($"API Request successful {nameof(GetDeviceProfile)}");
+                    try
+                    {
+                        var result = Newtonsoft.Json.JsonConvert.DeserializeObject <DeviceProfileRootDto[]>(await response.Content.ReadAsStringAsync());
+                        var sb = new System.Text.StringBuilder();
+
+                        reponseDto.DeviceProfiles = new Dictionary<int, DeviceProfileDetails>();
+                        foreach (var deviceProfileDto in result)
+                        {
+
+                            reponseDto.DeviceProfiles.Add(deviceProfileDto.id, new DeviceProfileDetails()
+                            {
+                                ProfileName= deviceProfileDto.profileName,
+                                DeviceTypePresent = deviceProfileDto.deviceType.id
+                            });
+                        }
+
+
+                        // message = $"Success while generating the device with  network key as {result.DeviceInventory.networkKey} and appkey as {result.DeviceInventory.appKey}";
+                    }
+                    catch (Exception ex)
+                    {
+                        DeviceLogger.MainLogger.Error("Error while converting success message {error}", ex.Message);
+                        reponseDto.message = $"Error while converting success message {ex.Message}";
+                    }
+                }
+                else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+                {
+                    // message of 
+                    DeviceLogger.MainLogger.Error("Internal server error");
+                    try
+                    {
+                        var result = Newtonsoft.Json.JsonConvert.DeserializeObject<ErrorMessageDto>(await response.Content.ReadAsStringAsync());
+                        var sb = new System.Text.StringBuilder();
+
+                        sb.Append($@"Error getting device profile");
+
+                        reponseDto.message = sb.ToString();
+
+                        //message = $"Error while generating the device with  {result.message}";
+                    }
+                    catch (Exception ex)
+                    {
+                        DeviceLogger.MainLogger.Error("Error while converting error message {error}", ex.Message);
+                        reponseDto.message = $"Error while converting error message {ex.Message}";
+                    }
+                }
+
+            }
+            if (!string.IsNullOrEmpty(reponseDto.message))
+                DeviceLogger.ActivityLogger.Debug(reponseDto.message);
+            return reponseDto;
+
+        }
         public async Task<bool> CheckUserCreds()
         {
             string c2ServerUrl = "services/loginservice/authenticate";

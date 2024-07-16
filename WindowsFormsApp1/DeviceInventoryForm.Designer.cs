@@ -54,6 +54,10 @@ namespace DeviceInventory
             this.headerLabel = new System.Windows.Forms.Label();
             this.TestRadioButton = new System.Windows.Forms.RadioButton();
             this.SerialPortRadioButton = new System.Windows.Forms.RadioButton();
+            this.DeviceTypeLabel = new System.Windows.Forms.Label();
+            this.DeviceProfileLabel = new System.Windows.Forms.Label();
+            this.DeviceTypeCombo = new System.Windows.Forms.ComboBox();
+            this.DeviceProfileCombo = new System.Windows.Forms.ComboBox();
             this.loginPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.loader)).BeginInit();
             this.devicePanel.SuspendLayout();
@@ -70,7 +74,7 @@ namespace DeviceInventory
             this.loginPanel.Controls.Add(this.UsernameLabel);
             this.loginPanel.Location = new System.Drawing.Point(0, 108);
             this.loginPanel.Name = "panel1";
-            this.loginPanel.Size = new System.Drawing.Size(1468, 703);
+            this.loginPanel.Size = new System.Drawing.Size(1700, 703);
             this.loginPanel.TabIndex = 0;
             // 
             // ServerURLTxt
@@ -166,9 +170,13 @@ namespace DeviceInventory
             this.devicePanel.Controls.Add(this.TestRadioButton);
             this.devicePanel.Controls.Add(this.SerialPortRadioButton);
             this.devicePanel.Controls.Add(this.SerialPortCombo);
+            this.devicePanel.Controls.Add(this.DeviceTypeLabel);
+            this.devicePanel.Controls.Add(this.DeviceProfileLabel);
+            this.devicePanel.Controls.Add(this.DeviceTypeCombo);
+            this.devicePanel.Controls.Add(this.DeviceProfileCombo);
             this.devicePanel.Location = new System.Drawing.Point(0, 108);
             this.devicePanel.Name = "panel2";
-            this.devicePanel.Size = new System.Drawing.Size(1454, 706);
+            this.devicePanel.Size = new System.Drawing.Size(1700, 706);
             this.devicePanel.TabIndex = 5;
             // 
             // richTextBox1
@@ -176,13 +184,13 @@ namespace DeviceInventory
             this.richTextBox1.Location = new System.Drawing.Point(7, 79);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ReadOnly = true;
-            this.richTextBox1.Size = new System.Drawing.Size(1444, 610);
+            this.richTextBox1.Size = new System.Drawing.Size(1650, 610);
             this.richTextBox1.TabIndex = 7;
             this.richTextBox1.Text = "";
             // 
             // keyTxt
             // 
-            this.keyTxt.Location = new System.Drawing.Point(400, 42);
+            this.keyTxt.Location = new System.Drawing.Point(365, 42);
             this.keyTxt.Name = "keyTxt";
             this.keyTxt.Size = new System.Drawing.Size(227, 28);
             this.keyTxt.TabIndex = 6;
@@ -192,7 +200,7 @@ namespace DeviceInventory
             // 
             this.keyLabel.AutoSize = true;
             this.keyLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.keyLabel.Location = new System.Drawing.Point(300, 45);
+            this.keyLabel.Location = new System.Drawing.Point(275, 45);
             this.keyLabel.Name = "keyLabel";
             this.keyLabel.Size = new System.Drawing.Size(105, 22);
             this.keyLabel.TabIndex = 5;
@@ -203,7 +211,7 @@ namespace DeviceInventory
             this.proceedButton.BackColor = System.Drawing.SystemColors.Highlight;
             this.proceedButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.proceedButton.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.proceedButton.Location = new System.Drawing.Point(1281, 19);
+            this.proceedButton.Location = new System.Drawing.Point(1550, 19);
             this.proceedButton.Name = "proceedButton";
             this.proceedButton.Size = new System.Drawing.Size(131, 56);
             this.proceedButton.TabIndex = 2;
@@ -252,11 +260,49 @@ namespace DeviceInventory
             // 
             this.SerialPortCombo.FormattingEnabled = true;
             this.SerialPortCombo.Items.AddRange(GetSerialPort());
-            this.SerialPortCombo.Location = new System.Drawing.Point(400, 42);
+            this.SerialPortCombo.Location = new System.Drawing.Point(365, 42);
             this.SerialPortCombo.Name = "SerialPortCombo";
             this.SerialPortCombo.Size = new System.Drawing.Size(227, 28);
             this.SerialPortCombo.TabIndex = 0;
             //this.SerialPortCombo.SelectedValueChanged += new System.EventHandler(this.comboBox1_SelectionChangeCommitted);
+            // 
+            // label2
+            // 
+            this.DeviceTypeLabel.AutoSize = true;
+            this.DeviceTypeLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DeviceTypeLabel.Location = new System.Drawing.Point(625, 45);
+            this.DeviceTypeLabel.Name = "DeviceTypeLabel";
+            this.DeviceTypeLabel.Size = new System.Drawing.Size(155, 22);
+            this.DeviceTypeLabel.TabIndex = 10;
+            this.DeviceTypeLabel.Text = "Device Type :";
+            // 
+            // label3
+            // 
+            this.DeviceProfileLabel.AutoSize = true;
+            this.DeviceProfileLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DeviceProfileLabel.Location = new System.Drawing.Point(1060, 45);
+            this.DeviceProfileLabel.Name = "DeviceProfileLabel";
+            this.DeviceProfileLabel.Size = new System.Drawing.Size(170, 22);
+            this.DeviceProfileLabel.TabIndex = 11;
+            this.DeviceProfileLabel.Text = "Device Profile :";
+            // 
+            // DeviceTypeCombo
+            // 
+            this.DeviceTypeCombo.FormattingEnabled = true;
+            this.DeviceTypeCombo.Location = new System.Drawing.Point(800, 42);
+            this.DeviceTypeCombo.Name = "DeviceTypeCombo";
+            this.DeviceTypeCombo.Size = new System.Drawing.Size(250, 28);
+            this.DeviceTypeCombo.TabIndex = 8;
+            this.DeviceTypeCombo.SelectedValueChanged += new System.EventHandler(this.deviceComboValueChanged);
+            // 
+            // DeviceProfileCombo
+            // 
+            this.DeviceProfileCombo.FormattingEnabled = true;
+            this.DeviceProfileCombo.Location = new System.Drawing.Point(1250, 42);
+            this.DeviceProfileCombo.Name = "DeviceProfileCombo";
+            this.DeviceProfileCombo.Size = new System.Drawing.Size(250, 28);
+            this.DeviceProfileCombo.TabIndex = 12;
+
             // 
             // DeviceVersionLabel
             // 
@@ -272,11 +318,11 @@ namespace DeviceInventory
             // 
             this.copyRightLabel.AutoSize = true;
             this.copyRightLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.copyRightLabel.Location = new System.Drawing.Point(998, 852);
+            this.copyRightLabel.Location = new System.Drawing.Point(1200, 852);
             this.copyRightLabel.Name = "copyRightLabel";
             this.copyRightLabel.Size = new System.Drawing.Size(449, 20);
             this.copyRightLabel.TabIndex = 6;
-            this.copyRightLabel.Text = "Copyright 2023 Asset Sence, Inc. All rights reserved";
+            this.copyRightLabel.Text = "Copyright 2024 Asset Sence, Inc. All rights reserved";
             // 
             // label2
             // 
@@ -293,7 +339,7 @@ namespace DeviceInventory
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(1582, 1050);
+            this.ClientSize = new System.Drawing.Size(1750, 1050);
             this.Controls.Add(this.headerLabel);
             this.Controls.Add(this.copyRightLabel);
             this.Controls.Add(this.DeviceVersionLabel);
@@ -341,6 +387,10 @@ namespace DeviceInventory
         private System.Windows.Forms.ComboBox SerialPortCombo;
         private System.Windows.Forms.RadioButton TestRadioButton;
         private System.Windows.Forms.RadioButton SerialPortRadioButton;
+        private System.Windows.Forms.Label DeviceTypeLabel;
+        private System.Windows.Forms.Label DeviceProfileLabel;
+        private System.Windows.Forms.ComboBox DeviceTypeCombo;
+        private System.Windows.Forms.ComboBox DeviceProfileCombo;
     }
 }
 
