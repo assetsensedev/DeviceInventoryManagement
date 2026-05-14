@@ -101,6 +101,6 @@ namespace WindowsFormsApp1.Domain
         public bool deviceSupportClassB { get; set; }
         public bool deviceSupportClassC { get; set; }
         public string payloadCodec { get; set; }
-        public int modelId { get; set; }
+        public int? modelId { get; set; }
     }
 }

@@ -53,7 +53,7 @@ namespace DeviceInventory
                     createDeviceInventoryDto.DeviceInventory.deviceProfile.id = deviceProfileId;
 
                     var responseDto = await proxyBase.CreateDevice(c2ServerUrl, createDeviceInventoryDto, TypeEnum.Interface);
-                    if(!string.IsNullOrEmpty(responseDto.NwkKey) && !string.IsNullOrEmpty(responseDto.AppKey))
+                    if (!string.IsNullOrEmpty(responseDto.NwkKey) && !string.IsNullOrEmpty(responseDto.AppKey))
                     {
                         var hexAppStringBeforeCRC = Encryption.EncryptHexString(responseDto.AppKey);
                         var hexAppString = Encryption.CRCCalculation(hexAppStringBeforeCRC, hexAppStringBeforeCRC.Length);

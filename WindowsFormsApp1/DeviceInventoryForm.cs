@@ -395,6 +395,9 @@ namespace DeviceInventory
             
         }
 
-       
+        private void DeviceInventoryForm_Load(object sender, EventArgs e)
+        {
+            this.SerialPortCombo.Items.AddRange(GetSerialPort());
+        }
     }
 }
